@@ -2,7 +2,17 @@
   "name": "popu",
   "version": "0.1.1",
   "description": "Object populate/template tools",
-  "keywords": [],
+  "keywords": [
+    "template",
+    "populate",
+    "object",
+    "json",
+    "resolve",
+    "render",
+    "mustache",
+    "handlebars",
+    "variable"
+  ],
   "author": "TY <towyuan@outlook.com>",
   "license": "MIT",
   "main": "./dist/index.js",
