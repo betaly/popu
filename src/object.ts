@@ -2,7 +2,7 @@ import {renderString} from './string';
 import {Any, AnyArray, AnyObject} from './types';
 
 type WalkHandler = (value: string, key?: string) => Any;
-export type ObjectHandler = (value: string, view: AnyObject, key?: string) => Any;
+export type ObjectHandler = (value: string, view?: AnyObject, key?: string) => Any;
 
 function walkObject(object: AnyArray | AnyObject, handler: WalkHandler) {
   if (Array.isArray(object)) return walkArray(object, handler);
@@ -52,7 +52,7 @@ function walk(input: AnyObject | string, handler: WalkHandler, key?: string): An
   }
 }
 
-export function renderObject(object: string | AnyObject, view: AnyObject, handler?: ObjectHandler) {
+export function renderObject(object: string | AnyObject, view?: AnyObject, handler?: ObjectHandler) {
   handler = handler || renderString;
 
   return walk(object, (value, key) => handler?.(value, view, key));

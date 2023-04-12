@@ -50,7 +50,8 @@ const TEMPLATE_OPEN = '${';
  @param {String} input template.
  @param {Object} view details.
  */
-export function renderString(input: string, view: AnyObject): Any {
+export function renderString(input: string, view?: AnyObject): Any {
+  if (!view) return input;
   // optimization to avoid regex calls (indexOf is strictly faster)
   if (input.indexOf(TEMPLATE_OPEN) === -1) return input;
   let result: AnyObject | undefined;
