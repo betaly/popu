@@ -1,0 +1,14 @@
+{
+  "extends": [
+    "@nutol/eslint-config/eslintrc.js",
+    "plugin:prettier/recommended"
+  ],
+  "plugins": ["prettier"],
+  "overrides": [
+    {
+      "files": ["**/*.ts"],
+      "rules": {}
+    }
+  ]
+}
+
