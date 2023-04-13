@@ -20,6 +20,10 @@
   "engines": {
     "node": ">=16"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/betaly/popu"
+  },
   "scripts": {
     "prerelease": "yarn && yarn build && cross-env CI=1 yarn test",
     "release": "yarn prerelease && np --no-2fa --yolo --no-yarn",

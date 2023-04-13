@@ -1,8 +1,6 @@
 # popu
 
 > Object populate/template tools
->
-> ts version of [json-templater](https://www.npmjs.com/package/json-templater)
 
 ## Usage: renderString
 
