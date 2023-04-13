@@ -1,10 +1,10 @@
-import {renderString} from './string';
-import {Any, AnyArray, AnyObject} from './types';
+import {Options, renderString} from './string';
+import {Any, AnyObject} from './types';
 
 type WalkHandler = (value: string, key?: string) => Any;
-export type ObjectHandler = (value: string, view?: AnyObject, key?: string) => Any;
+export type ObjectHandler = (value: string, view: AnyObject, key?: string) => Any;
 
-function walkObject(object: AnyArray | AnyObject, handler: WalkHandler) {
+function walkObject(object: Any[] | AnyObject, handler: WalkHandler) {
   if (Array.isArray(object)) return walkArray(object, handler);
   const result: AnyObject = {};
 
@@ -19,7 +19,7 @@ function walkObject(object: AnyArray | AnyObject, handler: WalkHandler) {
   return result;
 }
 
-function walkArray(array: AnyArray, handler: WalkHandler) {
+function walkArray(array: Any[], handler: WalkHandler) {
   return array.map(function (input) {
     return walk(input, handler);
   });
@@ -29,7 +29,7 @@ function walkArray(array: AnyArray, handler: WalkHandler) {
  Walk the object and invoke the function on string types.
 
  Why write yet-another cloner/walker? The primary reason is we also want to run
- template functions on keys _and_ values which most clone things don't do.
+ renderString functions on keys _and_ values which most clone things don't do.
 
  @param input object to walk and duplicate.
  @param handler handler to invoke on string types.
@@ -52,8 +52,44 @@ function walk(input: AnyObject | string, handler: WalkHandler, key?: string): An
   }
 }
 
-export function renderObject(object: string | AnyObject, view?: AnyObject, handler?: ObjectHandler) {
-  handler = handler || renderString;
+export interface RenderOptions extends Options {
+  handler?: ObjectHandler;
+}
 
-  return walk(object, (value, key) => handler?.(value, view, key));
+export function renderObject(
+  object: string,
+  view: AnyObject | AnyObject[],
+  handler?: ObjectHandler,
+  options?: RenderOptions,
+): string | AnyObject;
+export function renderObject(
+  object: string,
+  view: AnyObject | AnyObject[],
+  options?: RenderOptions,
+): string | AnyObject;
+export function renderObject(
+  object: AnyObject,
+  view: AnyObject | AnyObject[],
+  handler?: ObjectHandler,
+  options?: RenderOptions,
+): AnyObject;
+export function renderObject(object: AnyObject, view: AnyObject | AnyObject[], options?: RenderOptions): AnyObject;
+export function renderObject(
+  object: string | AnyObject,
+  view: AnyObject | AnyObject[],
+  handler?: ObjectHandler | RenderOptions,
+  options?: RenderOptions,
+) {
+  if (typeof handler !== 'function') {
+    options = handler;
+    handler = undefined;
+  }
+
+  options = options ?? {};
+  options.ignoreErrors = options.ignoreErrors ?? true;
+
+  // eslint-disable-next-line @typescript-eslint/no-shadow
+  const h = options.handler ?? handler ?? ((value, view, key) => renderString(value, view ?? {}, options));
+
+  return walk(object, (value, key) => h(value, view, key));
 }

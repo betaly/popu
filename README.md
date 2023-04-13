@@ -109,3 +109,37 @@ result:
   }
 }
 ```
+
+## Parameter Expansion
+
+`popu` supports parameter expansion in view like environment files. Parameter expansion is applied for unquoted and
+double-quoted values. Both braced (${VAR}) and unbraced ($VAR) expressions are supported.
+
+For braced expressions, the following formats are supported:
+
+- Direct substitution
+
+  - `${VAR}` -> value of `VAR`
+
+- Default value
+
+  - `${VAR:-default}` -> value of `VAR` if set and non-empty, otherwise `default`
+  - `${VAR:=default}` -> value of `VAR` if set and non-empty, otherwise `default` and set `VAR` to `default`
+
+- Required value
+
+  - `${VAR:?error}` -> value of `VAR` if set and non-empty, otherwise exit with error
+
+- Alternative value
+
+  - `${VAR:+replacement}` -> `replacement` if `VAR` is set and non-empty, otherwise empty
+
+- Length of value
+  - `${VAR:#}` -> length of value of `VAR` if set and non-empty, otherwise 0
+
+[more usage examples](src/__tests__/unit/string.unit.ts)
+
+## Credits
+
+- [json-templater](https://www.npmjs.com/package/json-templater) for the idea
+- [var-expansion](https://www.npmjs.com/package/var-expansion) for the string renderer
