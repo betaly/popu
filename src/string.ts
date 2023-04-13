@@ -132,7 +132,6 @@ function substituteVariablesInternal(str: string, position: number, result: Valu
       if (str.length > position) {
         result += str.substring(position);
       }
-      position = -1;
       return {value: result};
     } else {
       // $ found

@@ -89,7 +89,7 @@ export function renderObject(
   options.ignoreErrors = options.ignoreErrors ?? true;
 
   // eslint-disable-next-line @typescript-eslint/no-shadow
-  const h = options.handler ?? handler ?? ((value, view, key) => renderString(value, view ?? {}, options));
+  const h = options.handler ?? handler ?? ((value, view) => renderString(value, view ?? {}, options));
 
   return walk(object, (value, key) => h(value, view, key));
 }
