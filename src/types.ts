@@ -3,7 +3,8 @@
 export type Any = any;
 export type AnyObject = Record<string, any>;
 
-export type Value = string | number | boolean | void | null | Function | {[x: string]: Value} | Array<Value>;
+export type PrimitiveValue = string | number | boolean | null | Array<PrimitiveValue>;
+export type Value = PrimitiveValue | Function | {[x: string]: Value} | Array<Value>;
 
 export type View = Record<string, Value>;
 

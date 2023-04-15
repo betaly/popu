@@ -1,5 +1,8 @@
 import {Any, AnyObject, Value, View, ViewResolver} from './types';
 import {RenderError} from './error';
+import isEmpty from 'tily/is/empty';
+import {parseVariable} from './parse';
+import isString from 'tily/is/string';
 
 export type Result = {
   value?: Value;
@@ -123,7 +126,7 @@ function substituteVariable(variable: string, context: Context) {
 
 function substituteVariablesInternal(str: string, position: number, result: Value, context: Context): Result {
   if (position === -1 || !str) {
-    return {value: result};
+    return {value: isString(result) ? parseVariable(result) : result};
   } else {
     let index = str.indexOf('$', position);
 
@@ -132,7 +135,7 @@ function substituteVariablesInternal(str: string, position: number, result: Valu
       if (str.length > position) {
         result += str.substring(position);
       }
-      return {value: result};
+      return {value: isString(result) ? parseVariable(result) : result};
     } else {
       // $ found
       let variable;
@@ -205,7 +208,7 @@ function substituteVariablesInternal(str: string, position: number, result: Valu
           return {error, value};
         }
         if (value != null) {
-          result = !result ? value : result + String(value);
+          result = isEmpty(result) ? value : result + String(value);
         }
         return substituteVariablesInternal(str, position, result, context);
       }

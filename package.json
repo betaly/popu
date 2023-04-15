@@ -75,5 +75,10 @@
     "src",
     "!*/__tests__"
   ],
-  "packageManager": "yarn@3.5.0"
+  "packageManager": "yarn@3.5.0",
+  "dependencies": {
+    "debug": "^4.3.4",
+    "is-string-and-not-blank": "^0.0.2",
+    "tily": "^2.20.1"
+  }
 }

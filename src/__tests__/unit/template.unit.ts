@@ -130,6 +130,26 @@ describe('render string', function () {
       const value = template('$A + $B = 3', name => vars[name]);
       expect(value).toEqual('1 + 2 = 3');
     });
+
+    it('should parse boolean string as boolean', function () {
+      const value = template('${bool}', {bool: 'true'});
+      expect(value).toEqual(true);
+    });
+
+    it('should parse boolean string as string', function () {
+      const value = template('${bool}', {bool: 'true*'});
+      expect(value).toEqual('true');
+    });
+
+    it('should parse number string as number', function () {
+      const value = template('${bool}', {bool: '0'});
+      expect(value).toEqual(0);
+    });
+
+    it('should parse number string as string', function () {
+      const value = template('${bool}', {bool: '0*'});
+      expect(value).toEqual('0');
+    });
   });
 
   describe('nested', function () {
@@ -160,6 +180,26 @@ describe('render string', function () {
 
     it('nested token false value', () => {
       verify(['${foo.bar}', {foo: {bar: false}}], false);
+    });
+
+    it('nested token boolean string as boolean', function () {
+      const value = template('${foo.bar}', {foo: {bar: 'true'}});
+      expect(value).toEqual(true);
+    });
+
+    it('nested token boolean string as string', function () {
+      const value = template('${foo.bar}', {foo: {bar: 'true*'}});
+      expect(value).toEqual('true');
+    });
+
+    it('nested token number string as number', function () {
+      const value = template('${foo.bar}', {foo: {bar: '0'}});
+      expect(value).toEqual(0);
+    });
+
+    it('nested token number string as string', function () {
+      const value = template('${foo.bar}', {foo: {bar: '0*'}});
+      expect(value).toEqual('0');
     });
 
     it('replace in the middle of string', () => {
