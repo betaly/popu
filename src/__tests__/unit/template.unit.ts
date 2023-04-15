@@ -1,5 +1,5 @@
-import {renderString} from '../../string';
-import {AnyObject} from '../../types';
+import {template} from '../../template';
+import {AnyObject, Value} from '../../types';
 import {RenderError} from '../../error';
 
 describe('render string', function () {
@@ -18,110 +18,105 @@ describe('render string', function () {
     };
 
     it('should accept empty environ', function () {
-      const value = renderString(line0, {});
+      const value = template(line0, {});
       expect(value).toEqual('la vispa  altro testo  noo provaaa');
     });
 
     it('should accept empty strings', function () {
-      const value = renderString('', {});
+      const value = template('', {});
       expect(value).toEqual('');
     });
 
     it('should substitute a var', function () {
-      const value = renderString(line0, {BOH: 1});
+      const value = template(line0, {BOH: 1});
       expect(value).toEqual('la vispa  altro testo 1 noo provaaa');
     });
 
     it('should substitute multiple vars', function () {
-      const value = renderString(line0, env);
+      const value = template(line0, env);
       expect(value).toEqual('la vispa ciccio altro testo 1 nooaahhh provaaa');
     });
 
     it('should substitute ${BOH}', function () {
-      const value = renderString('${BOH}', env);
-      expect(value).toEqual('1');
+      const value = template('${BOH}', env);
+      expect(value).toEqual(1);
     });
 
     it('should substitute $BOH', function () {
-      const value = renderString('$BOH', env);
-      expect(value).toEqual('1');
+      const value = template('$BOH', env);
+      expect(value).toEqual(1);
     });
 
     it('should raise error ${BOH', function () {
-      // const {error} = renderString('${BOH', env);
-      // expect(error).toEqual({
-      //   message: 'unexpected EOF while looking for matching }',
-      //   position: 0,
-      // });
-      expect(() => renderString('${BOH', env)).toThrowError(
+      expect(() => template('${BOH', env)).toThrowError(
         new RenderError('unexpected EOF while looking for matching }', 0),
       );
     });
 
     it('should preserve spaces', function () {
-      const value = renderString(' $BOH ', {BOH: 'abc'});
+      const value = template(' $BOH ', {BOH: 'abc'});
       expect(value).toEqual(' abc ');
     });
 
     it('should preserve $', function () {
-      const value = renderString('$ ${} $', {});
+      const value = template('$ ${} $', {});
       expect(value).toEqual('$ ${} $');
     });
 
     it('should substite $PWD/test', function () {
-      const value = renderString('$PWD/test', env);
+      const value = template('$PWD/test', env);
       expect(value).toEqual('/Users/andreax/test');
     });
 
     it('should expand ${PWD:+ciccio}', function () {
-      const value = renderString('${PWD:+ciccio}', env);
+      const value = template('${PWD:+ciccio}', env);
       expect(value).toEqual('ciccio');
     });
 
     it('should expand ${AAA:+bla}', function () {
-      const value = renderString('${AAA:+bla}', env);
+      const value = template('${AAA:+bla}', env);
       expect(value).toEqual('');
     });
 
     it('should expand ${PWD:-ciccio}', function () {
-      const value = renderString('${PWD:-ciccio}', env);
+      const value = template('${PWD:-ciccio}', env);
       expect(value).toEqual('/Users/andreax');
     });
 
     it('should expand ${AAA:-bla}', function () {
-      const value = renderString('${AAA:-bla}', env);
+      const value = template('${AAA:-bla}', env);
       expect(value).toEqual('bla');
     });
 
     it('should expand ${PWD:#} ${BBB:#}', function () {
-      const value = renderString('${PWD:#} ${BBB:#}', env);
+      const value = template('${PWD:#} ${BBB:#}', env);
       expect(value).toEqual('14 0');
     });
 
     it('should expand ${NEWVAR} ${NEWVAR:=newval} ${NEWVAR} ${NEWVAR:=oldval}', function () {
-      const value = renderString('${NEWVAR} ${NEWVAR:=newval} ${NEWVAR} ${NEWVAR:=oldval}', env);
+      const value = template('${NEWVAR} ${NEWVAR:=newval} ${NEWVAR} ${NEWVAR:=oldval}', env);
       expect(value).toEqual(' newval newval newval');
     });
 
     it('should expand ${NEWVARx:?} 1 2 3', function () {
-      // const {error} = renderString('${NEWVARx:?} 1 2 3', env);
+      // const {error} = template('${NEWVARx:?} 1 2 3', env);
       // expect(error).toEqual({message: 'NEWVARx: parameter null or not set'});
-      expect(() => renderString('${NEWVARx:?} 1 2 3', env)).toThrowError('NEWVARx: parameter null or not set');
+      expect(() => template('${NEWVARx:?} 1 2 3', env)).toThrowError('NEWVARx: parameter null or not set');
     });
 
     it('should expand ${NEWVARx:?has not been set} 1 2 3', function () {
-      // const {error} = renderString('${NEWVARx:?has not been set} 1 2 3', env);
+      // const {error} = template('${NEWVARx:?has not been set} 1 2 3', env);
       // expect(error).toEqual({message: 'NEWVARx: has not been set'});
-      expect(() => renderString('${NEWVARx:?has not been set} 1 2 3', env)).toThrowError('NEWVARx: has not been set');
+      expect(() => template('${NEWVARx:?has not been set} 1 2 3', env)).toThrowError('NEWVARx: has not been set');
     });
 
     it('should execute functions', function () {
-      const value = renderString('${f}', env);
-      expect(value).toEqual('295');
+      const value = template('${f}', env);
+      expect(value).toEqual(295);
     });
 
     // it('should expand $? $$', function () {
-    //   const value = renderString('$? $$', env, {
+    //   const value = template('$? $$', env, {
     //     specialVars: ['$', '?'],
     //   });
     //   expect(value).toEqual('0 12345');
@@ -132,14 +127,14 @@ describe('render string', function () {
         A: 1,
         B: 2,
       };
-      const value = renderString('$A + $B = 3', name => vars[name]);
+      const value = template('$A + $B = 3', name => vars[name]);
       expect(value).toEqual('1 + 2 = 3');
     });
   });
 
   describe('nested', function () {
-    function verify(input: [string, AnyObject], output: string | AnyObject) {
-      const result = renderString(...input);
+    function verify(input: [string, AnyObject], output: Value) {
+      const result = template(...input);
       expect(result).toEqual(output);
     }
 
@@ -164,7 +159,7 @@ describe('render string', function () {
     });
 
     it('nested token false value', () => {
-      verify(['${foo.bar}', {foo: {bar: false}}], 'false');
+      verify(['${foo.bar}', {foo: {bar: false}}], false);
     });
 
     it('replace in the middle of string', () => {

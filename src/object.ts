@@ -1,4 +1,4 @@
-import {Options, renderString} from './string';
+import {Options, template} from './template';
 import {Any, AnyObject} from './types';
 
 type WalkHandler = (value: string, key?: string) => Any;
@@ -29,7 +29,7 @@ function walkArray(array: Any[], handler: WalkHandler) {
  Walk the object and invoke the function on string types.
 
  Why write yet-another cloner/walker? The primary reason is we also want to run
- renderString functions on keys _and_ values which most clone things don't do.
+ template functions on keys _and_ values which most clone things don't do.
 
  @param input object to walk and duplicate.
  @param handler handler to invoke on string types.
@@ -89,7 +89,7 @@ export function renderObject(
   options.ignoreErrors = options.ignoreErrors ?? true;
 
   // eslint-disable-next-line @typescript-eslint/no-shadow
-  const h = options.handler ?? handler ?? ((value, view) => renderString(value, view ?? {}, options));
+  const h = options.handler ?? handler ?? ((value, view) => template(value, view ?? {}, options));
 
   return walk(object, (value, key) => h(value, view, key));
 }

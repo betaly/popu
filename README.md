@@ -2,20 +2,20 @@
 
 > Object populate/template tools
 
-## Usage: renderString
+## Usage: template
 
 The string submodule is a very simple mustache like variable replacement with no special features:
 
 ```ts
-import {renderString} from 'popu';
-renderString('${xfoo} ${say.what}', {xfoo: 'yep', say: {what: 'yep'}});
+import {template} from 'popu';
+template('${xfoo} ${say.what}', {xfoo: 'yep', say: {what: 'yep'}});
 // yep yep
 ```
 
 ## Usage: renderObject
 
 The much more interesting part of this module is the object sub-module which does a deep clone and runs strings through
-renderString (including keys!)
+template (including keys!)
 
 `config.json:`
 
@@ -44,7 +44,7 @@ result:
 
 ### Custom render
 
-You can override default renderer using the third argument in `object` (`renderString` is default):
+You can override default renderer using the third argument in `object` (`template` is default):
 
 `template.json:`
 
@@ -85,7 +85,7 @@ Handler function gets three arguments:
 Using this data some complex logic could be implemented, for instance:
 
 ```js
-import popu, {renderString} from 'popu';
+import popu, {template} from 'popu';
 
 popu(require('./template.json'), {magic: 'key', value: 'value'}, (value, data, key) => {
   // custom renderer for some special value
@@ -93,7 +93,7 @@ popu(require('./template.json'), {magic: 'key', value: 'value'}, (value, data, k
     return 'foo';
   }
   // usual string renderer
-  return renderString(value, data);
+  return template(value, data);
 });
 ```
 

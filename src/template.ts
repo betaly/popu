@@ -205,7 +205,7 @@ function substituteVariablesInternal(str: string, position: number, result: Valu
           return {error, value};
         }
         if (value != null) {
-          result = typeof value === 'object' && !result ? value : result + String(value);
+          result = !result ? value : result + String(value);
         }
         return substituteVariablesInternal(str, position, result, context);
       }
@@ -223,7 +223,7 @@ function substituteVariablesInternal(str: string, position: number, result: Valu
  * @param {String|array} options.specialVars - List of special (single char) variables
  * @param {Boolean} options.ignoreErrors - Ignore errors
  */
-export function renderString(text: string, view: View | ViewResolver, options: Options = {}) {
+export function template(text: string, view: View | ViewResolver, options: Options = {}) {
   view = typeof view === 'function' ? view : createResolverFromMapping(view != null ? view : {});
   const context: Context = {
     view,

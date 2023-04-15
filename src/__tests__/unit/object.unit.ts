@@ -1,5 +1,5 @@
 import {renderObject} from '../../object';
-import {renderString} from '../../string';
+import {template} from '../../template';
 import {Any} from '../../types';
 
 describe('object', function () {
@@ -101,7 +101,7 @@ describe('object', function () {
             if (key === 'foo') {
               return value;
             }
-            return renderString(value, view);
+            return template(value, view);
           },
         ),
       {
