@@ -89,9 +89,10 @@ function resolveVariable(context: Context, name: string) {
 
 function substituteVariable(variable: string, context: Context) {
   let value;
-  const s = variable.split(':', 2);
-  if (s.length === 2) {
-    const [name, modifier] = s;
+  const idx = variable.indexOf(':');
+  if (idx > 0) {
+    const name = variable.substring(0, idx);
+    const modifier = variable.substring(idx + 1);
     value = resolveVariable(context, name);
     if (modifier[0] === '+') {
       // Substitute replacement, but only if variable is defined and nonempty. Otherwise, substitute nothing

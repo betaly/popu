@@ -150,6 +150,11 @@ describe('render string', function () {
       const value = template('${bool}', {bool: '0*'});
       expect(value).toEqual('0');
     });
+
+    it('should parse url correctly', function () {
+      const value = template('${url:-https://example.com}', {});
+      expect(value).toEqual('https://example.com');
+    });
   });
 
   describe('nested', function () {
